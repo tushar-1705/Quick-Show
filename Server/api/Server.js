@@ -1,10 +1,10 @@
 import express from 'express';
 import cors from 'cors';
 import 'dotenv/config';
-import connectDB from './Configs/db.js';
+import connectDB from '../Configs/db.js';
 import { clerkMiddleware } from '@clerk/express'
 import { serve } from "inngest/express";
-import { inngest, functions } from "./Inngest/index.js"
+import { inngest, functions } from "../Inngest/index.js"
 
 const app = express();
 const port = 3000;
