@@ -11,6 +11,7 @@ const FeaturedSection = () => {
 
   const uniqueMovies = [];
   const uniqueShows = shows.filter((show) => {
+    if (!show.movie || !show.movie._id) return false; // skip invalid items
     const movieId = show.movie._id;
     if (!uniqueMovies.includes(movieId)) {
       uniqueMovies.push(movieId);
@@ -35,9 +36,14 @@ const FeaturedSection = () => {
       </div>
 
       <div className="flex flex-wrap max-sm:justify-center gap-8 mt-8">
-        {uniqueShows.slice(0, 4).map((show) => (
-          <MovieCard key={show._id} movie={show.movie} />
-        ))}
+        {uniqueShows
+          .slice(0, 4)
+          .map(
+            (show) =>
+              show.movie && (
+                <MovieCard key={show.movie._id} movie={show.movie} />
+              )
+          )}
       </div>
 
       <div className="flex justify-center mt-20">

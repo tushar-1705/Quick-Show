@@ -87,8 +87,24 @@ const MovieDetails = () => {
   };
 
   useEffect(() => {
-    if (id) getShow();
-  }, [id]);
+  if (id) getShow();
+
+  // also ensure we have the shows list for recommendations
+  if (!Array.isArray(shows) || shows.length === 0) {
+    (async () => {
+      try {
+        const res = await axios.get("/api/show");
+        if (res.data?.success && Array.isArray(res.data.shows)) {
+          // you might have a setter in context for shows
+          // e.g., setShows(res.data.shows);
+        }
+      } catch (err) {
+        console.error("Failed to fetch shows:", err);
+      }
+    })();
+  }
+}, [id]);
+
 
   if (loading) return <Loading />;
 
@@ -198,16 +214,20 @@ const MovieDetails = () => {
 
       <p className="text-lg font-medium mt-20 mb-8">You May also Like</p>
       <div className="flex flex-wrap max-sm:justify-center gap-8">
-        {Array.isArray(shows)
-          ? [
-              ...new Map(
-                shows.map((s) => [(s.movie ?? s)._id, s.movie ?? s])
-              ).values(),
-            ]
-              .filter((m) => m._id !== movie._id) // current movie ko remove karo
-              .slice(0, 3)
-              .map((m, idx) => <MovieCard key={m._id ?? idx} movie={m} />)
-          : null}
+        {Array.isArray(shows) && shows.length > 0 ? (
+    [
+      ...new Map(
+        shows
+          .filter((s) => s?.movie && s.movie._id)
+          .map((s) => [s.movie._id, s.movie])
+      ).values(),
+    ]
+      .filter((m) => m._id !== movie._id)
+      .slice(0, 3)
+      .map((m, idx) => <MovieCard key={m._id ?? idx} movie={m} />)
+  ) : (
+    <p className="text-gray-400">No recommendations available.</p>
+  )}
       </div>
 
       <div className="flex justify-center mt-20">

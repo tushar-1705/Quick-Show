@@ -18,11 +18,15 @@ const Movies = () => {
 
       <h1 className="text-lg font-medium my-4">Now Showing</h1>
       <div className="flex flex-wrap max-sm:justify-center gap-8">
-        {[...new Map(shows.map((show) => [show.movie._id, show])).values()].map(
-          (show) => (
-            <MovieCard movie={show.movie} key={show.movie._id} />
-          )
-        )}
+        {[
+          ...new Map(
+            shows
+              .filter((show) => show?.movie && show.movie?._id) // ✅ remove nulls
+              .map((show) => [show.movie._id, show])
+          ).values(),
+        ].map((show) => (
+          <MovieCard movie={show.movie} key={show.movie._id} />
+        ))}
       </div>
     </div>
   ) : (
