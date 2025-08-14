@@ -3,7 +3,6 @@ import User from "../Models/User.js";
 import Booking from "../Models/Booking.js";
 import Show from "../Models/Show.js";
 import sendEmail from "../Configs/nodeMailer.js";
-import { use } from "react";
 
 // Create a client to send and receive events
 export const inngest = new Inngest({
