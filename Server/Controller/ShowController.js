@@ -2,6 +2,7 @@ import axios from 'axios';
 import dns from 'dns';
 import Movie from '../Models/Movie.js';
 import Show from '../Models/Show.js';
+import { inngest } from '../Inngest/index.js';
 
 // Force IPv4 (optional, helps avoid ECONNRESET on some networks)
 dns.setDefaultResultOrder('ipv4first');
@@ -110,6 +111,12 @@ export const addShow = async (req, res) => {
     if (showsToCreate.length > 0) {
       await Show.insertMany(showsToCreate);
     }
+
+    // Trigger Inngest event
+    await inngest.send({
+      name : 'app/show.added',
+      data : {movieTitle : movie.title}
+    })
 
     res.json({ success: true, message: 'Show Added successfully.' });
 

@@ -37,7 +37,7 @@ const FeaturedSection = () => {
 
       <div className="flex flex-wrap max-sm:justify-center gap-8 mt-8">
         {uniqueShows
-          .slice(0, 4)
+          .slice(0, 3)
           .map(
             (show) =>
               show.movie && (
