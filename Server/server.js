@@ -10,6 +10,7 @@ import bookingRouter from './Routes/bookingRoutes.js';
 import adminRouter from './Routes/adminRoutes.js';
 import userRouter from './Routes/userRoutes.js';
 import { stripeWebhooks } from './Controller/stripeWbhooks.js';
+import bodyParser from 'body-parser';
 
 const app = express();
 const port = 3000;
@@ -17,12 +18,12 @@ const port = 3000;
 await connectDB(); 
 
 // Stripe webhooks route 
-app.use('api/stripe/webhook', express.raw({type : 'application/json'}), stripeWebhooks)
+app.use('/api/stripe/webhook', bodyParser.raw({ type: 'application/json' }), stripeWebhooks);
 
 // Middleware
-app.use(express.json())
 app.use(cors())
 app.use(clerkMiddleware())
+app.use(express.json())
 
 
 // API Routes
